@@ -1,0 +1,18 @@
+{
+  "total_test_images": 20000,
+  "total_real": 10000,
+  "total_fake": 10000,
+  "decision_threshold": 0.5,
+  "overall_accuracy": 86.78,
+  "real_accuracy": 86.6,
+  "fake_accuracy": 86.96,
+  "precision": 86.65,
+  "recall": 86.96,
+  "f1_score": 86.8,
+  "confusion_matrix": {
+    "true_negatives_real": 8660,
+    "false_positives_fake": 1340,
+    "false_negatives_missed_fake": 1304,
+    "true_positives_fake": 8696
+  }
+}
