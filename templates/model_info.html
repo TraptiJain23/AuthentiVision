@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}AuthentiVision - Model Architecture & Grad-CAM{% endblock %}
+
+{% block content %}
+<div class="container px-lg-5">
+    <div class="mb-4">
+        <h2 class="fw-bold mb-1">
+            <i class="fa-solid fa-microchip text-primary me-2"></i>
+            MobileNetV2 Architecture & Grad-CAM Theory
+        </h2>
+        <p class="text-muted mb-0">Detailed breakdown of the Deep Learning transfer learning framework and Explainable AI pipeline.</p>
+    </div>
+
+    <!-- Overview Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-lg-6">
+            <div class="card p-4 h-100">
+                <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-network-wired text-primary"></i>
+                    <span>MobileNetV2 Transfer Learning Pipeline</span>
+                </h5>
+                <p class="text-muted small">
+                    MobileNetV2 uses depthwise separable convolutions with inverted residuals and linear bottlenecks. 
+                    This lightweight, highly efficient architecture delivers fast inference suitable for high-throughput 
+                    marketing campaign asset auditing while maintaining superior accuracy.
+                </p>
+
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered small">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Stage</th>
+                                <th>Layer Name / Operation</th>
+                                <th>Output Dimension</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Input</td>
+                                <td><code>input_1</code> (RGB image)</td>
+                                <td>(None, 224, 224, 3)</td>
+                            </tr>
+                            <tr>
+                                <td>Normalization</td>
+                                <td><code>preprocess_input</code> ([-1, 1])</td>
+                                <td>(None, 224, 224, 3)</td>
+                            </tr>
+                            <tr>
+                                <td>Backbone</td>
+                                <td>16 Inverted Residual Bottlenecks</td>
+                                <td>(None, 7, 7, 320)</td>
+                            </tr>
+                            <tr class="table-warning">
+                                <td><strong>Target Conv</strong></td>
+                                <td><code>out_relu</code> (Conv_1 + ReLU6)</td>
+                                <td><strong>(None, 7, 7, 1280)</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Pooling</td>
+                                <td><code>GlobalAveragePooling2D</code></td>
+                                <td>(None, 1280)</td>
+                            </tr>
+                            <tr>
+                                <td>Regularization</td>
+                                <td><code>Dropout(0.3)</code></td>
+                                <td>(None, 1280)</td>
+                            </tr>
+                            <tr class="table-primary">
+                                <td><strong>Classification Head</strong></td>
+                                <td><code>Dense(1, Sigmoid)</code> (P(AI-Generated))</td>
+                                <td><strong>(None, 1)</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card p-4 h-100">
+                <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-fire text-danger"></i>
+                    <span>Grad-CAM Explainable AI Formulation</span>
+                </h5>
+                <p class="text-muted small">
+                    Gradient-weighted Class Activation Mapping (Grad-CAM) uses the gradients of any target concept 
+                    flowing into the final convolutional layer to produce a coarse localization map highlighting important regions.
+                </p>
+
+                <div class="p-3 bg-light rounded-3 mb-3 small">
+                    <div class="fw-bold text-dark mb-1">1. Neuron Importance Weights (\(\alpha_k^c\)):</div>
+                    <p class="mb-2 text-muted">
+                        Computed via global average pooling of gradients with respect to feature activation maps \(A^k\):
+                    </p>
+                    <div class="text-center p-2 bg-white rounded border font-monospace">
+                        &alpha;<sub>k</sub><sup>c</sup> = (1 / Z) &Sigma;<sub>i</sub> &Sigma;<sub>j</sub> (&part; y<sup>c</sup> / &part; A<sub>i,j</sub><sup>k</sup>)
+                    </div>
+                </div>
+
+                <div class="p-3 bg-light rounded-3 small">
+                    <div class="fw-bold text-dark mb-1">2. Heatmap Aggregation & ReLU:</div>
+                    <p class="mb-2 text-muted">
+                        Weighted linear combination filtered by ReLU to keep only features that positively correlate with the target class:
+                    </p>
+                    <div class="text-center p-2 bg-white rounded border font-monospace">
+                        L<sub>Grad-CAM</sub><sup>c</sup> = ReLU( &Sigma;<sub>k</sub> &alpha;<sub>k</sub><sup>c</sup> A<sup>k</sup> )
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Training CIFAKE / GenImage CLI Guide -->
+    <div class="card p-4 mb-5">
+        <h5 class="fw-bold mb-2 d-flex align-items-center gap-2">
+            <i class="fa-solid fa-terminal text-success"></i>
+            <span>Model Training & Fine-Tuning CLI Guide</span>
+        </h5>
+        <p class="text-muted small mb-3">
+            To train AuthentiVision on the standard <strong>CIFAKE</strong> (60,000 Real / 60,000 AI) or <strong>GenImage</strong> datasets:
+        </p>
+
+        <div class="p-3 bg-dark text-light rounded-3 font-monospace small mb-3">
+            # 1. Phase 1: Train classification head (Backbone frozen, saves models/phase1_mobilenetv2.keras)<br>
+            python src/train.py --phase 1 --data_dir "C:\path\to\cifake" --epochs 5 --batch_size 32<br><br>
+            # 2. Phase 2: Fine-tune upper backbone layers (Loads Phase 1 model, saves models/mobilenetv2_authentivision.keras)<br>
+            python src/train.py --phase 2 --data_dir "C:\path\to\cifake" --epochs 5 --batch_size 32
+        </div>
+
+        <div class="row g-3 small text-muted">
+            <div class="col-md-4">
+                <strong>Phase 1: Feature Extraction</strong><br>
+                Trains only dense classification head while freezing MobileNetV2 base weights at lr = 1e-4.
+            </div>
+            <div class="col-md-4">
+                <strong>Phase 2: Fine-Tuning</strong><br>
+                Unfreezes upper residual blocks (block 14+) at lower learning rate (lr = 1e-5) to adapt to generative diffusion artifacts.
+            </div>
+            <div class="col-md-4">
+                <strong>Model Persistence</strong><br>
+                Saves finalized model to <code>models/mobilenetv2_authentivision.keras</code> for automatic hot-reloading in the Flask dashboard.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

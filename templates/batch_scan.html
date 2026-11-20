@@ -1,0 +1,333 @@
+
+{% extends "base.html" %}
+
+{% block title %}AuthentiVision - Batch Scanner{% endblock %}
+
+{% block content %}
+<div class="container px-lg-5">
+
+    <div class="page-heading mb-4">
+        <h2>Batch Image Scanner</h2>
+        <p class="text-muted">
+            Upload multiple images or a ZIP file to check authenticity.
+        </p>
+    </div>
+
+    {% if not campaign %}
+
+    <!-- BATCH UPLOAD FORM -->
+    <div class="card p-4 p-md-5 mx-auto" style="max-width:800px">
+        <form action="{{ url_for('batch_scan') }}"
+              method="POST"
+              enctype="multipart/form-data"
+              class="scan-form">
+
+            <div class="mb-4">
+                <label class="form-label fw-bold" for="reportName">
+                    Report Name
+                </label>
+
+                <input
+                    id="reportName"
+                    type="text"
+                    name="campaign_name"
+                    class="form-control form-control-lg"
+                    placeholder="e.g., My Image Scan Report"
+                    required
+                >
+
+                <div class="form-text">
+                    This name will appear in your PDF report.
+                </div>
+            </div>
+
+            <div class="dropzone-container mb-4">
+                <div class="dropzone-icon">
+                    <i class="fa-solid fa-file-zipper"></i>
+                </div>
+
+                <h4>Upload Multiple Images or ZIP File</h4>
+
+                <p class="text-muted">
+                    Drag and drop or select your files.
+                </p>
+
+                <input
+                    type="file"
+                    name="assets"
+                    class="d-none"
+                    accept=".zip,.jpg,.jpeg,.png,.webp,.bmp"
+                    multiple
+                    required
+                >
+
+                <div class="file-preview-info"></div>
+            </div>
+
+            <div class="text-center">
+                <button
+                    type="submit"
+                    class="btn btn-primary btn-lg rounded-pill px-5">
+
+                    <i class="fa-solid fa-magnifying-glass me-2"></i>
+                    Scan Images
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+    {% else %}
+
+    <!-- BATCH SUMMARY -->
+    <div class="row g-3 mb-4">
+
+        <!-- TOTAL IMAGES -->
+        <div class="col-md-4">
+            <div class="card batch-summary-card h-100">
+
+                <div class="batch-summary-title">
+                    Total Images
+                </div>
+
+                <div class="batch-summary-main">
+                    <div class="scan-ring total-ring"
+                         style="--value: 100;">
+
+                        <div class="ring-inner">
+                            <strong>
+                                {{ campaign.total_assets }}
+                            </strong>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="batch-summary-bottom">
+                    <span>Images Scanned</span>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- AI-GENERATED -->
+        <div class="col-md-4">
+            <div class="card batch-summary-card h-100">
+
+                <div class="batch-summary-title">
+                    AI-Generated
+                </div>
+
+                <div class="batch-summary-main">
+                    <div class="scan-ring ai-ring"
+                         style="--value: {{ campaign.ai_ratio }};">
+
+                        <div class="ring-inner">
+                            <strong>
+                                {{ campaign.ai_ratio }}%
+                            </strong>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="batch-summary-bottom">
+                    <strong class="text-danger">
+                        {{ campaign.ai_count }}
+                    </strong>
+
+                    <span>AI-Generated Images</span>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- AUTHENTIC -->
+        <div class="col-md-4">
+            <div class="card batch-summary-card h-100">
+
+                <div class="batch-summary-title">
+                    Authentic
+                </div>
+
+                <div class="batch-summary-main">
+                    <div class="scan-ring real-ring"
+                         style="--value: {{ campaign.real_ratio }};">
+
+                        <div class="ring-inner">
+                            <strong>
+                                {{ campaign.real_ratio }}%
+                            </strong>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="batch-summary-bottom">
+                    <strong class="text-success">
+                        {{ campaign.real_count }}
+                    </strong>
+
+                    <span>Authentic Images</span>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- SCAN RESULTS TABLE -->
+    <div class="card p-4 mb-4">
+
+        <h4>Scan Results</h4>
+
+        <p class="text-muted">
+            Report: {{ campaign.campaign_name }}
+        </p>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Filename</th>
+                        <th>Prediction</th>
+                        <th>Confidence</th>
+                        <th>View Analysis</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for item in campaign.results %}
+
+                    <tr>
+                        <td>
+                            <img
+                                src="{{ url_for('static', filename=item.web_overlay) }}"
+                                alt="Image preview"
+                                style="width:55px;height:55px;object-fit:cover;border-radius:10px">
+                        </td>
+
+                        <td>{{ item.filename }}</td>
+
+                        <td>
+                            {% if item.predicted_class == 'AI-Generated' %}
+                                <span class="badge bg-danger">
+                                    AI-Generated
+                                </span>
+                            {% else %}
+                                <span class="badge bg-success">
+                                    Authentic
+                                </span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {{ "%.1f"|format(item.confidence|float) }}%
+                        </td>
+
+                        <td>
+                            <button
+                                class="btn btn-sm btn-outline-primary"
+                                type="button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#imageModal{{ loop.index }}">
+
+                                View Heatmap
+                            </button>
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+    <!-- IMAGE ANALYSIS MODALS -->
+    {% for item in campaign.results %}
+
+    <div class="modal fade"
+         id="imageModal{{ loop.index }}"
+         tabindex="-1"
+         aria-hidden="true">
+
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        {{ item.filename }}
+                    </h5>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6 text-center">
+                            <p>Heatmap Overlay</p>
+
+                            <img
+                                class="img-fluid rounded"
+                                src="{{ url_for('static', filename=item.web_overlay) }}"
+                                alt="Heatmap overlay">
+                        </div>
+
+                        <div class="col-md-6 text-center">
+                            <p>Heatmap</p>
+
+                            <img
+                                class="img-fluid rounded"
+                                src="{{ url_for('static', filename=item.web_heatmap) }}"
+                                alt="Heatmap">
+                        </div>
+
+                    </div>
+
+                    {% if item.explanation %}
+                    <p class="text-muted small mt-3">
+                        {{ item.explanation }}
+                    </p>
+                    {% endif %}
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    {% endfor %}
+
+    <!-- ACTION BUTTONS -->
+    <div class="action-bar d-flex justify-content-center flex-wrap gap-3 mt-4">
+
+        <a href="{{ url_for('index') }}"
+           class="btn btn-outline-primary btn-lg rounded-pill px-4">
+
+            <i class="fa-solid fa-rotate me-2"></i>
+            New Scan
+        </a>
+
+        <a href="{{ url_for('download_pdf', campaign_id=campaign.campaign_id) }}"
+           class="btn btn-primary btn-lg rounded-pill px-4">
+
+            <i class="fa-solid fa-file-pdf me-2"></i>
+            Download PDF Report
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</div>
+{% endblock %}

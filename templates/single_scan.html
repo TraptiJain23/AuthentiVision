@@ -1,0 +1,248 @@
+
+{% extends "base.html" %}
+
+{% block title %}AuthentiVision · Single Scan{% endblock %}
+
+{% block content %}
+<div class="container content-shell">
+
+    <div class="page-heading">
+        <div class="eyebrow">IMAGE VERIFICATION</div>
+        <h2>Single Image Scan</h2>
+    </div>
+
+    {% if not result %}
+
+    <!-- IMAGE UPLOAD -->
+    <div class="card scan-upload mx-auto p-4 p-md-5">
+        <form action="{{ url_for('single_scan') }}"
+              method="POST"
+              enctype="multipart/form-data"
+              class="scan-form">
+
+            <div class="dropzone-container mb-4">
+                <div class="dropzone-icon">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                </div>
+
+                <h4>Upload an image</h4>
+
+                <p class="text-muted">
+                    Drag and drop an image to check its authenticity.
+                </p>
+
+                <input
+                    type="file"
+                    name="image"
+                    class="d-none"
+                    accept=".jpg,.jpeg,.png,.webp,.bmp"
+                    required
+                >
+
+                <div class="file-preview-info"></div>
+            </div>
+
+            <div class="text-center">
+                <button
+                    class="btn btn-primary btn-lg rounded-pill px-5"
+                    type="submit">
+
+                    <i class="fa-solid fa-magnifying-glass me-2"></i>
+                    Scan Image
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+    {% else %}
+
+    <!-- SCAN RESULTS -->
+    <div class="row g-4 result-grid">
+
+        <!-- PREDICTION RESULT -->
+        <div class="col-lg-4">
+            <div class="card p-4 h-100">
+
+                <div class="eyebrow mb-3">SCAN RESULT</div>
+
+                <!-- VERDICT AND PERCENTAGE -->
+                <div class="text-center py-3">
+
+                    <div class="result-label {{ 'text-danger' if result.predicted_class == 'AI-Generated' else 'text-success' }}">
+                        {{ 'AI-Generated' if result.predicted_class == 'AI-Generated' else 'Authentic' }}
+                    </div>
+
+                    <div class="single-verdict-confidence">
+
+                        <div class="single-confidence-number">
+                            {{ "%.1f"|format(result.confidence|float) }}%
+                        </div>
+
+                        <div class="single-confidence-label">
+                            Confidence Score
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- CONFIDENCE PROGRESS BAR -->
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Confidence</span>
+                    <strong>
+                        {{ "%.1f"|format(result.confidence|float) }}%
+                    </strong>
+                </div>
+
+                <div class="confidence-meter mb-4">
+                    <div
+                        class="h-100 {{ 'meter-fill-ai' if result.predicted_class == 'AI-Generated' else 'meter-fill-real' }}"
+                        style="width: {{ result.confidence }}%;">
+                    </div>
+                </div>
+
+                <!-- PROBABILITY BREAKDOWN -->
+                <div class="probability-panel">
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>AI-Generated</span>
+                        <strong>
+                            {{ "%.1f"|format(result.ai_percentage|float) }}%
+                        </strong>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <span>Authentic</span>
+                        <strong>
+                            {{ "%.1f"|format(result.real_percentage|float) }}%
+                        </strong>
+                    </div>
+
+                </div>
+
+                <p class="small text-muted mt-4 mb-0">
+                    Results are estimates from an AI model
+                    and may be incorrect.
+                </p>
+
+            </div>
+        </div>
+
+        <!-- IMAGE ANALYSIS -->
+        <div class="col-lg-8">
+            <div class="card p-4 h-100">
+
+                <h4 class="mb-3">
+                    <i class="fa-solid fa-eye text-primary me-2"></i>
+                    Image Analysis
+                </h4>
+
+                <!-- IMAGE TABS -->
+                <ul class="nav nav-pills gap-2 mb-3" role="tablist">
+
+                    <li class="nav-item">
+                        <button
+                            class="nav-link active"
+                            data-bs-toggle="pill"
+                            data-bs-target="#tab-overlay"
+                            type="button">
+                            Overlay
+                        </button>
+                    </li>
+
+                    <li class="nav-item">
+                        <button
+                            class="nav-link"
+                            data-bs-toggle="pill"
+                            data-bs-target="#tab-heatmap"
+                            type="button">
+                            Heatmap
+                        </button>
+                    </li>
+
+                    <li class="nav-item">
+                        <button
+                            class="nav-link"
+                            data-bs-toggle="pill"
+                            data-bs-target="#tab-original"
+                            type="button">
+                            Original
+                        </button>
+                    </li>
+
+                </ul>
+
+                <!-- IMAGE CONTENT -->
+                <div class="tab-content">
+
+                    <!-- OVERLAY -->
+                    <div class="tab-pane fade show active"
+                         id="tab-overlay">
+
+                        <div class="comparison-card">
+                            <img
+                                src="{{ url_for('static', filename='uploads/' + result.overlay_file) }}"
+                                alt="Grad-CAM overlay">
+                        </div>
+
+                    </div>
+
+                    <!-- HEATMAP -->
+                    <div class="tab-pane fade"
+                         id="tab-heatmap">
+
+                        <div class="comparison-card">
+                            <img
+                                src="{{ url_for('static', filename='uploads/' + result.heatmap_file) }}"
+                                alt="Grad-CAM heatmap">
+                        </div>
+
+                    </div>
+
+                    <!-- ORIGINAL IMAGE -->
+                    <div class="tab-pane fade"
+                         id="tab-original">
+
+                        <div class="comparison-card">
+                            <img
+                                src="{{ url_for('static', filename='uploads/' + (result.original_web_path if result.original_web_path else result.filename)) }}"
+                                alt="Original uploaded image">
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="action-bar d-flex flex-wrap justify-content-center gap-3 mt-4">
+
+        <a href="{{ url_for('index') }}"
+           class="btn btn-outline-primary btn-lg rounded-pill px-4">
+
+            <i class="fa-solid fa-rotate me-2"></i>
+            New Scan
+        </a>
+
+        {% if result.scan_id %}
+
+        <a href="{{ url_for('download_pdf', campaign_id=result.scan_id) }}"
+           class="btn btn-primary btn-lg rounded-pill px-4">
+
+            <i class="fa-solid fa-file-pdf me-2"></i>
+            Download PDF Report
+        </a>
+
+        {% endif %}
+
+    </div>
+
+    {% endif %}
+
+</div>
+{% endblock %}

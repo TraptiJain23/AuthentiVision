@@ -1,0 +1,77 @@
+
+{% extends "base.html" %}
+
+{% block title %}AuthentiVision · Home{% endblock %}
+
+{% block content %}
+
+<div class="container home-shell">
+
+    <section class="home-hero text-center">
+        <div class="eyebrow">
+            AI-POWERED IMAGE AUTHENTICITY
+        </div>
+
+        <h1>
+            Is your image
+            <span class="brand-accent">authentic?</span>
+        </h1>
+
+        <p class="text-muted mx-auto" style="max-width:620px">
+            Choose how you'd like to scan.
+            Get a clear prediction, confidence score and visual heatmap.
+        </p>
+    </section>
+
+    <div class="row g-4 justify-content-center mode-grid">
+
+        <!-- SINGLE IMAGE SCAN -->
+        <div class="col-md-6">
+            <a class="mode-card" href="{{ url_for('single_scan') }}">
+
+                <span class="mode-icon">
+                    <i class="fa-solid fa-image"></i>
+                </span>
+
+                <h3>Single Image Scan</h3>
+
+                <p>
+                    Drag and drop an image to check its authenticity.
+                </p>
+
+                <span class="mode-cta">
+                    Scan an image
+                    <i class="fa-solid fa-arrow-right"></i>
+                </span>
+
+            </a>
+        </div>
+
+        <!-- BATCH IMAGE SCAN -->
+        <div class="col-md-6">
+            <a class="mode-card" href="{{ url_for('batch_scan') }}">
+
+                <span class="mode-icon">
+                    <i class="fa-solid fa-images"></i>
+                </span>
+
+                <h3>Batch Image Scan</h3>
+
+                <p>
+                    Check multiple images or a ZIP file
+                    and download a PDF report.
+                </p>
+
+                <span class="mode-cta">
+                    Scan multiple images
+                    <i class="fa-solid fa-arrow-right"></i>
+                </span>
+
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
