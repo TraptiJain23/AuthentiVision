@@ -1,0 +1,460 @@
+
+:root {
+    --primary: #477dff;
+    --primary-hover: #6a96ff;
+    --success: #42d6a4;
+    --danger: #ff7185;
+    --card-bg: #151f33;
+    --border-color: #293955;
+    --bs-body-bg: #0b1220;
+    --bs-body-color: #eaf0ff;
+    --bs-secondary-color: #9baac3;
+    --bs-border-color: #293955;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: radial-gradient(ellipse at 50% -20%, #172c52 0%, #0b1220 53%);
+    color: #eaf0ff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main { flex: 1; }
+a { text-decoration: none; }
+
+.app-navbar {
+    background: rgba(12, 20, 36, .95);
+    border-bottom: 1px solid #263650;
+    backdrop-filter: blur(12px);
+}
+
+.navbar-brand {
+    color: #f3f7ff !important;
+    font-size: 1.25rem;
+}
+
+.brand-accent { color: #76a0ff; }
+
+.brand-icon {
+    display: grid;
+    place-items: center;
+    background: #346bfb;
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+}
+
+.app-footer {
+    border-top: 1px solid #263650;
+    background: #0b1220;
+    color: #91a1bd;
+    font-size: .83rem;
+}
+
+.card {
+    background: #151f33;
+    border: 1px solid #293955;
+    border-radius: 20px;
+    box-shadow: 0 16px 40px rgba(0,0,0,.14);
+    color: #eaf0ff;
+}
+
+.card:hover { border-color: #344768; }
+
+.text-muted, .form-text {
+    color: #a6b4cc !important;
+}
+
+.text-dark { color: #eaf0ff !important; }
+.text-secondary { color: #a6b4cc !important; }
+.text-danger { color: #ff7185 !important; }
+.text-success { color: #42d6a4 !important; }
+
+.bg-light, .bg-white {
+    background-color: #1b2940 !important;
+}
+
+.border, .border-top, .border-bottom {
+    border-color: #344768 !important;
+}
+
+.form-control {
+    background: #0f1a2c;
+    color: #f3f7ff;
+    border: 1px solid #344768;
+    border-radius: 12px;
+}
+
+.form-control:focus {
+    background: #122039;
+    color: white;
+    border-color: #477dff;
+    box-shadow: 0 0 0 .2rem rgba(71,125,255,.17);
+}
+
+.form-control::placeholder { color: #778ba9; }
+
+.btn-primary {
+    background: #477dff;
+    border-color: #477dff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #376df0;
+    border-color: #376df0;
+}
+
+.btn-outline-primary {
+    color: #a9c3ff;
+    border-color: #477dff;
+}
+
+.btn-outline-primary:hover {
+    background: #477dff;
+    color: white;
+}
+
+.btn {
+    font-weight: 700;
+}
+
+.eyebrow {
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .16em;
+    color: #83a9ff;
+}
+
+.home-shell {
+    max-width: 1050px;
+    padding-top: clamp(25px, 6vh, 85px);
+    padding-bottom: 75px;
+}
+
+.home-hero h1 {
+    font-size: clamp(2.3rem, 5vw, 4.3rem);
+    font-weight: 800;
+    letter-spacing: -.05em;
+    margin: 12px 0 18px;
+}
+
+.home-hero p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+}
+
+.mode-grid { margin-top: 55px; }
+
+.mode-card {
+    display: block;
+    height: 100%;
+    padding: 38px;
+    background: linear-gradient(155deg, #1c2d4a, #141e31);
+    border: 1px solid #34486c;
+    border-radius: 24px;
+    color: #eef4ff;
+    transition: transform .2s, border-color .2s, box-shadow .2s;
+}
+
+.mode-card:hover {
+    color: white;
+    transform: translateY(-5px);
+    border-color: #477dff;
+    box-shadow: 0 20px 45px rgba(30,70,160,.2);
+}
+
+.mode-icon {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    background: #294b85;
+    color: #b9d0ff;
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+}
+
+.mode-card h3 {
+    font-weight: 800;
+    font-size: 1.5rem;
+}
+
+.mode-card p {
+    color: #a6b4cc;
+    line-height: 1.7;
+    min-height: 52px;
+}
+
+.mode-cta {
+    color: #8fb0ff;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.content-shell { max-width: 1200px; }
+
+.page-heading { margin: 12px 0 30px; }
+
+.page-heading h2 {
+    font-weight: 800;
+    letter-spacing: -.03em;
+    margin-top: 8px;
+}
+
+.scan-upload { max-width: 760px; }
+
+.dropzone-container {
+    border: 2px dashed #52709d;
+    border-radius: 18px;
+    padding: 55px 24px;
+    text-align: center;
+    background: #101d31;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.dropzone-container:hover,
+.dropzone-container.dragover {
+    border-color: #75a2ff;
+    background: #162945;
+}
+
+.dropzone-icon {
+    font-size: 3.2rem;
+    color: #78a2ff;
+    margin-bottom: 20px;
+}
+
+.comparison-card {
+    background: #090e18;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.comparison-card img {
+    display: block;
+    width: 100%;
+    height: 390px;
+    object-fit: contain;
+}
+
+.result-label {
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    font-weight: 800;
+}
+
+.confidence-meter {
+    height: 11px;
+    border-radius: 20px;
+    background: #2b3a52;
+    overflow: hidden;
+}
+
+.meter-fill-ai {
+    background: linear-gradient(90deg, #ff9d59, #ff637b);
+}
+
+.meter-fill-real {
+    background: linear-gradient(90deg, #477dff, #42d6a4);
+}
+
+.probability-panel {
+    background: #101b2e;
+    border: 1px solid #2b3a52;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+.nav-pills .nav-link {
+    color: #a6b4cc;
+    background: #1c2c45;
+    border-radius: 10px;
+}
+
+.nav-pills .nav-link.active {
+    color: white;
+    background: #477dff;
+}
+
+.action-bar { padding: 14px 0 28px; }
+
+.table {
+    --bs-table-bg: #151f33;
+    --bs-table-color: #eaf0ff;
+    --bs-table-border-color: #344768;
+    --bs-table-hover-bg: #1e2e49;
+    --bs-table-hover-color: #fff;
+}
+
+.modal-content {
+    background: #151f33;
+    color: #eaf0ff;
+    border: 1px solid #344768;
+}
+
+.modal-header, .modal-footer {
+    border-color: #344768;
+}
+
+.alert { border-radius: 12px; }
+
+@media (max-width: 767px) {
+    .mode-grid { margin-top: 28px; }
+    .mode-card { padding: 28px; }
+    .comparison-card img { height: 300px; }
+    .card { border-radius: 16px; }
+    .dropzone-container { padding: 35px 16px; }
+}
+
+
+/* Batch Scan Circular Charts */
+
+.scan-ring {
+    --ring-color: #477dff;
+    width: 145px;
+    height: 145px;
+    border-radius: 50%;
+    background: conic-gradient(
+        var(--ring-color) calc(var(--value) * 1%),
+        #293955 0
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ai-ring {
+    --ring-color: #ff7185;
+}
+
+.real-ring {
+    --ring-color: #42d6a4;
+}
+
+.ring-inner {
+    width: 115px;
+    height: 115px;
+    border-radius: 50%;
+    background: #151f33;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ring-inner strong {
+    font-size: 1.65rem;
+    font-weight: 800;
+    color: #eaf0ff;
+}
+
+/* Confidence below Single Scan verdict */
+
+.verdict-percentage {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #eaf0ff;
+    line-height: 1.2;
+}
+
+
+
+/* Balanced Batch Summary Cards */
+
+.batch-summary-card {
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 28px 18px !important;
+}
+
+.batch-summary-title {
+    font-size: 1rem;
+    color: #a6b4cc;
+    margin-bottom: 20px;
+}
+
+.batch-summary-main {
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.batch-total-number {
+    font-size: 3.2rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.batch-summary-bottom {
+    min-height: 60px;
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.batch-summary-bottom strong {
+    font-size: 1.5rem;
+}
+
+.batch-summary-bottom span {
+    color: #a6b4cc;
+    font-size: .85rem;
+}
+
+.scan-ring {
+    width: 145px;
+    height: 145px;
+    flex-shrink: 0;
+}
+
+
+/* Single Scan Percentage Under Verdict */
+
+.single-verdict-confidence {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    margin: 10px 0 20px;
+}
+
+.single-confidence-number {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #eaf0ff;
+    line-height: 1.2;
+}
+
+.single-confidence-label {
+    font-size: .85rem;
+    color: #a6b4cc;
+    margin-top: 5px;
+}
+
+/* Total Images Circle */
+
+.total-ring {
+    --ring-color: #477dff;
+    --value: 100;
+}
+
+.total-ring .ring-inner strong {
+    font-size: 2.2rem;
+    color: #eaf0ff;
+}
